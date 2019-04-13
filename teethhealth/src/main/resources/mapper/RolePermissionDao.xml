@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teeth.dao.RolePermissionDao">
+    <resultMap id="roles" type="com.teeth.pojo.Role">
+        <id property="id" column="id"/>
+        <result property="roleName" column="role_name"/>
+        <collection property="rolePermissions" ofType="com.teeth.pojo.RolePermission">
+            <id column="my_role_permission_id" property="id"/>
+            <result column="role_id" property="roleId"/>
+            <result column="permission_id" property="permissionId"/>
+            <association property="permission" javaType="com.teeth.pojo.Permission">
+                <id column="my_permission_id" property="id"/>
+                <result column="permission_name" property="permissionName"/>
+            </association>
+        </collection>
+    </resultMap>
+
+    <select id="getAllRoles" resultMap="roles">
+                select r.*,
+                rp.id my_role_permission_id,rp.role_id,rp.permission_id,
+                p.id my_permission_id,p.permission_name
+                from  role as  r
+                left join role_permission rp on r.id = rp.role_id
+                left join  permission p on rp.permission_id = p.id
+    </select>
+
+
+    <select id="getAllPermissionByRoleId" resultMap="roles">
+             select r.*,
+                rp.id my_role_permission_id,rp.role_id,rp.permission_id,
+                p.id my_permission_id,p.permission_name
+                from  role as  r
+                left join role_permission rp on r.id = rp.role_id
+                left join  permission p on rp.permission_id = p.id where r.id=#{roleId}
+    </select>
+
+
+    <delete id="deleteAdminRole" parameterType="java.lang.Integer">
+        delete from admin_user_role where admin_user_id=#{adminUserId}
+    </delete>
+
+    <!--给管理员添加角色-->
+    <insert id="addAdminUserRole" parameterType="com.teeth.pojo.AdminUserRole" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO admin_user_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="adminUserId != null">admin_user_id,</if>
+            <if test="roleId != null">role_id,</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id} ,</if>
+            <if test="adminUserId != null">#{adminUserId} ,</if>
+            <if test="roleId != null">#{roleId} ,</if>
+        </trim>
+    </insert>
+</mapper>

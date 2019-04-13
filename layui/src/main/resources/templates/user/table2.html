@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Table2</title>
+    <link rel="stylesheet" type="text/css" href="/layui2.45/css/layui.css" />
+    <script type="text/javascript" src="/layui2.45/layui.js"></script>
+</head>
+<body>
+<table class="layui-table" lay-data="{url:'/findLayuiPage', page:true, id:'test'}" lay-filter="test">
+    <thead>
+    <tr>
+        <th lay-data="{field:'id', sort: true}">ID</th>
+        <th lay-data="{field:'username'}">用户名</th>
+        <th lay-data="{field:'password', sort: true}">密码</th>
+        <th lay-data="{field:'sex'}">性别</th>
+        <th lay-data="{field:'hobby'}">爱好</th>
+        <th lay-data="{field:'birthday', sort: true}">生日</th>
+    </tr>
+    </thead>
+</table>
+<script type="text/javascript">
+    layui.use('table',function () {
+       var table=layui.table;
+    });
+</script>
+</body>
+</html>

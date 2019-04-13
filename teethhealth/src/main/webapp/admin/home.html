@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:th="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="/layui2.45/css/layui.css" />
+		<script type="text/javascript" src="/layui2.45/layui.js"></script>
+		<style>
+			.my_left_tree .magin_left20px{
+				margin-left: 20px;
+			}
+			.my_left_tree .magin_left35px{
+				margin-left: 35px;
+			}
+		</style>
+	</head>
+
+	<body class="layui-layout-body">
+
+
+		<div class="layui-layout layui-layout-admin">
+			<div class="layui-header">
+				<div class="layui-logo">箐齿荟管理系统</div>
+				<ul class="layui-nav layui-layout-right">
+					<li class="layui-nav-item">
+						<a href="javascript:void(0)">欢迎管理员：admin</a>
+						<dl class="layui-nav-child">
+							<dd id="001" class="layui-this">
+							<a href="javascript:;" data-id="001" data-title="基本资料"  data-url="/admin/adminUser/adminUserMessage.html" class="site-demo-active" data-type="tabAdd">
+								<span class="">基本资料</span>
+							</a>
+							<dd id="002" class="layui-this">
+								<a href="javascript:;" data-id="002" data-title="修改密码"  data-url="/admin/adminUser/updatePassword.html" class="site-demo-active" data-type="tabAdd">
+									<span class="">基本资料</span>
+								</a>
+							</dd>
+						</dd>
+						</dl>
+					</li>
+					<li class="layui-nav-item">
+						<a href="">安全退出</a>
+					</li>
+				</ul>
+			
+			</div>
+
+			<div class="my_left_tree layui-side layui-bg-black">
+				<div class="layui-side-scroll">
+					<!-- 左侧垂直导航区域-->
+					<ul class="layui-nav layui-nav-tree" lay-filter="test">
+						<li class="layui-nav-item layui-nav-itemed">
+							<a href="javascript:;">
+								<i class="layui-icon layui-icon-home"></i>
+								<span class="magin_left20px">主页</span>
+							</a>
+							<dl class="layui-nav-child">
+								<dd id="0" class="layui-this">
+									<a href="javascript:;" data-id="0" data-title="用户表格1" id="homePage" data-url="form.html" class="site-demo-active" data-type="tabAdd">
+										<span class="magin_left35px">主页</span>
+									</a>
+								</dd>
+							</dl>
+						</li>
+						<li class="layui-nav-item">
+						
+							<a href="javascript:;">
+								<i class="layui-icon layui-icon-user"></i>
+								<span class="magin_left20px">权限</span>
+							</a>
+							<dl class="layui-nav-child">
+								<dd id="1">
+									<a href="javascript:;" data-id="1" data-title="管理权限" data-url="/admin/adminUser/adminUserList.html" class="site-demo-active" data-type="tabAdd">
+										<span class="magin_left35px">管理权限</span>
+									</a>
+								</dd>
+								<dd id="2">
+									<a href="javascript:;" data-id="2" data-title="用户表格2" data-url="userTable.html" class="site-demo-active" data-type="tabAdd">
+										<span class="magin_left35px">Table2</span>
+									</a>
+								</dd>
+							</dl>
+						</li>
+						<li class="layui-nav-item">
+							<a href="javascript:;">
+								<i class="layui-icon layui-icon-component"></i>
+								<span class="magin_left20px">分类</span>
+							</a>
+							<dl class="layui-nav-child">
+								<dd id="3">
+									<a href="javascript:;" data-id="3" data-title="分类管理" data-url="form.html" class="site-demo-active" data-type="tabAdd">
+										<span class="magin_left35px">form表单</span>
+									</a>
+								</dd>
+								<dd id="4">
+									<a href="javascript:;" class="site-demo-active" data-id="4" data-title="代付列表" data-type="tabAdd">
+										<span class="magin_left35px">代付列表</span>
+									</a>
+								</dd>
+							</dl>
+						</li>
+						<li class="layui-nav-item">
+							<a href="javascript:;">
+								<i class="layui-icon layui-icon-survey"></i>
+							<span class="magin_left20px">企业</span>
+							</a>
+							<dl class="layui-nav-child">
+								<dd id="5">
+									<a href="javascript:;" data-id="5" class="site-demo-active" data-title="企业管理" data-type="tabAdd">
+										<span class="magin_left35px">企业管理</span>
+									</a>
+								</dd>
+								<dd id="6">
+									<a href="javascript:;" data-id="6" class="site-demo-active" data-title="企业新闻" data-type="tabAdd">
+										<span class="magin_left35px">企业新闻</span>
+									</a>
+								</dd>
+							</dl>
+						</li>
+						<span shiro:hasRole="客服">
+							<li class="layui-nav-item">
+								<a href="javascript:;">
+									<i class="layui-icon layui-icon-reply-fill"></i>
+									<span class="magin_left20px">客服</span>
+								</a>
+								<dl class="layui-nav-child">
+									<dd id="7">
+										<a href="javascript:;" data-id="7" class="site-demo-active" data-title="客服管理" data-type="tabAdd">
+											<span class="magin_left35px">客服管理</span>
+										</a>
+									</dd>
+								</dl>
+							</li>
+						</span>
+
+						<li class="layui-nav-item">
+							<a href="javascript:;">
+							<i class="layui-icon layui-icon-set"></i>
+							<span class="magin_left20px">设置</span>
+							</a>
+							<dl class="layui-nav-child">
+								<dd id="8">
+									<a href="javascript:;" data-id="8" class="site-demo-active" data-title="系统设置" data-type="tabAdd">
+										<span class="magin_left35px">系统设置</span>
+									</a>
+								</dd>
+							</dl>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<!--tab标签-->
+			<div class="layui-tab" id="layui_tab_content" lay-filter="demo" lay-allowclose="true" style="margin-left: 200px;">
+				<ul class="layui-tab-title">
+					<li class="layui-this" lay-id="0">主页</li>
+				</ul>
+				<div class="layui-tab-content">
+					<div class="layui-tab-item layui-show">
+						<iframe  scrolling="auto" frameborder="0" src="/admin/form.html" style="width: 100%; height: 754px;"></iframe>
+					</div>
+				</div>
+			</div>
+
+			<div class="layui-footer" style="text-align:center;">
+				<!-- 底部固定区域 -->
+				© xxxxxxx后台管理系统
+			</div>
+		</div>
+		<script>
+			layui.use(['element', 'layer', 'jquery'], function() {
+				var element = layui.element;
+				// var layer = layui.layer;
+				var $ = layui.$;
+
+				/**
+				 * 点击左边的菜单列表，对应的添加选项卡
+				 */
+				// 配置tab实践在下面无法获取到菜单元素
+				$('.site-demo-active').on('click', function() {
+					var dataid = $(this);
+					//这时会判断右侧.layui-tab-title属性下的有lay-id属性的li的数目，即已经打开的tab项数目
+					if($(".layui-tab-title li[lay-id]").length <= 0) {
+						//如果比零小，则直接打开新的tab项
+						active.tabAdd(dataid.attr("data-url"), dataid.attr("data-id"), dataid.attr("data-title"));
+					} else {
+						//否则判断该tab项是否以及存在
+						var isData = false; //初始化一个标志，为false说明未打开该tab项 为true则说明已有
+						$.each($(".layui-tab-title li[lay-id]"), function() {
+							//如果点击左侧菜单栏所传入的id 在右侧tab项中的lay-id属性可以找到，则说明该tab项已经打开
+							if($(this).attr("lay-id") == dataid.attr("data-id")) {
+								isData = true;
+							}
+						})
+						if(isData == false) {
+							//标志为false 新增一个tab项
+							active.tabAdd(dataid.attr("data-url"), dataid.attr("data-id"), dataid.attr("data-title"));
+						}
+					}
+					//最后不管是否新增tab，最后都转到要打开的选项页面上
+					active.tabChange(dataid.attr("data-id"));
+				});
+				/**
+				 * 写的是一个javascript对象，对应选项卡的增改删
+				 */
+				var active = {
+					//在这里给active绑定几项事件，后面可通过active调用这些事件
+					tabAdd: function(url, id, name) {
+						//新增一个Tab项 传入三个参数，分别对应其标题，tab页面的地址，还有一个规定的id，是标签中data-id的属性值
+						//关于tabAdd的方法所传入的参数可看layui的开发文档中基础方法部分
+						element.tabAdd('demo', {
+							title: name,
+							content: '<iframe data-frameid="' + id + '" scrolling="auto" frameborder="0" src="' + url + '" style="width:100%;height:99%;"></iframe>',
+							id: id //规定好的id
+						})
+						FrameWH(); //计算ifram层的大小
+					},
+					tabChange: function(id) {
+						//切换到指定Tab项
+						element.tabChange('demo', id); //根据传入的id传入到指定的tab项
+					},
+					tabDelete: function(id) {
+						element.tabDelete("demo", id); //删除
+					},
+				};
+				/**
+				 * 计算iframe高度
+				 */
+				function FrameWH() {
+					var h = $(window).height();
+					$("iframe").css("height", h + "px");
+				};
+				/**
+				 * 监听事件当你点击选项卡，对应左边的树添加类
+				 */
+				element.on('tab(demo)', function(data) {
+					var lay_id = $(this).attr("lay-id");
+					$(".layui-nav-child").find("dd").removeClass("layui-this");
+					$("#" + lay_id).addClass("layui-this");
+				});
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjitc.dao.AdminUserDao">
+    <resultMap id="adminUser" type="com.zjitc.pojo.AdminUser">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="sex" property="sex"/>
+        <result column="mobile" property="mobile"/>
+        <result column="email" property="birthday"/>
+        <result column="birthday" property="birthday"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <collection property="adminUserRole" ofType="com.zjitc.pojo.AdminUserRole">
+            <id column="admin_user_role_id" property="id"/>
+            <result column="admin_user_id" property="adminUserId"/>
+            <result column="role_id" property="roleId"/>
+            <association property="role" javaType="com.zjitc.pojo.Role">
+                <id column="my_role_id" property="id"/>
+                <result column="role_name" property="roleName"/>
+                <collection property="rolePermissions" ofType="com.zjitc.pojo.RolePermission">
+                    <id column="my_role_permission_id" property="id"/>
+                    <result column="role_id" property="roleId"/>
+                    <result column="permission_id" property="permissionId"/>
+                    <association property="permission" javaType="com.zjitc.pojo.Permission">
+                        <id column="my_permission_id" property="id"/>
+                        <result column="permission_name" property="permissionName"/>
+                    </association>
+                </collection>
+            </association>
+        </collection>
+    </resultMap>
+
+    <select id="findOneByUserName" resultMap="adminUser">
+           select au.*,
+        aur.id admin_user_role_id,aur.admin_user_id,aur.role_id,
+        r.id my_role_id,r.role_name,
+        rp.id my_role_permission_id,rp.role_id,rp.permission_id,
+        p.id my_permission_id,p.permission_name
+        from  admin_user as au
+        left  join admin_user_role aur on au.id = aur.admin_user_id
+        left join role r on aur.role_id = r.id
+        left join role_permission rp on r.id = rp.role_id
+        left join permission p on rp.permission_id = p.id where username=#{username}
+    </select>
+
+
+    <select id="getAll" resultMap="adminUser">
+        select au.*,
+        aur.id admin_user_role_id,aur.admin_user_id,aur.role_id,
+        r.id my_role_id,r.role_name,
+        rp.id my_role_permission_id,rp.role_id,rp.permission_id,
+        p.id my_permission_id,p.permission_name
+        from  admin_user as au
+        left  join admin_user_role aur on au.id = aur.admin_user_id
+        left join role r on aur.role_id = r.id
+        left join role_permission rp on r.id = rp.role_id
+        left join permission p on rp.permission_id = p.id
+    </select>
+
+</mapper>

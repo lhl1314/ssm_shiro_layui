@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teeth.dao.AdminUserDao">
+    <resultMap id="adminUser" type="com.teeth.pojo.AdminUser">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="image" property="image"/>
+        <result column="sex" property="sex"/>
+        <result column="mobile" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="birthday" property="birthday"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="status" property="status"/>
+        <result column="province_id" property="provinceId"/>
+        <result column="city_id" property="cityId"/>
+        <result column="area_id" property="areaId"/>
+        <result column="address" property="address"/>
+        <collection property="adminUserRole" ofType="com.teeth.pojo.AdminUserRole">
+            <id column="admin_user_role_id" property="id"/>
+            <result column="admin_user_id" property="adminUserId"/>
+            <result column="role_id" property="roleId"/>
+            <association property="role" javaType="com.teeth.pojo.Role">
+                <id column="my_role_id" property="id"/>
+                <result column="role_name" property="roleName"/>
+                <collection property="rolePermissions" ofType="com.teeth.pojo.RolePermission">
+                    <id column="my_role_permission_id" property="id"/>
+                    <result column="role_id" property="roleId"/>
+                    <result column="permission_id" property="permissionId"/>
+                    <association property="permission" javaType="com.teeth.pojo.Permission">
+                        <id column="my_permission_id" property="id"/>
+                        <result column="permission_name" property="permissionName"/>
+                    </association>
+                </collection>
+            </association>
+        </collection>
+    </resultMap>
+
+    <select id="findOneByUserName" resultMap="adminUser">
+           select au.*,
+        aur.id admin_user_role_id,aur.admin_user_id,aur.role_id,
+        r.id my_role_id,r.role_name,
+        rp.id my_role_permission_id,rp.role_id,rp.permission_id,
+        p.id my_permission_id,p.permission_name
+        from  admin_user as au
+        left  join admin_user_role aur on au.id = aur.admin_user_id
+        left join role r on aur.role_id = r.id
+        left join role_permission rp on r.id = rp.role_id
+        left join permission p on rp.permission_id = p.id where username=#{username}
+    </select>
+
+
+    <select id="getAll" resultMap="adminUser">
+        select au.id,au.username,au.password,au.image,au.sex,au.mobile,
+        au.email,au.birthday,
+        au.create_time,au.update_time,au.status
+         from admin_user as au
+    </select>
+
+    <!--获取一个管理员-->
+    <select id="getOne" parameterType="java.lang.Integer" resultMap="adminUser">
+               select au.*,
+        aur.id admin_user_role_id,aur.admin_user_id,aur.role_id,
+        r.id my_role_id,r.role_name,
+        rp.id my_role_permission_id,rp.role_id,rp.permission_id,
+        p.id my_permission_id,p.permission_name
+        from  admin_user as au
+        left  join admin_user_role aur on au.id = aur.admin_user_id
+        left join role r on aur.role_id = r.id
+        left join role_permission rp on r.id = rp.role_id
+        left join permission p on rp.permission_id = p.id where au.id=#{id}
+    </select>
+    <!--添加管理员-->
+    <insert id="addAdminUser" parameterType="com.teeth.pojo.AdminUser" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO admin_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="username != null">username,</if>
+            <if test="password != null">password,</if>
+            <if test="image != null">image,</if>
+            <if test="sex != null">sex,</if>
+            <if test="mobile != null">mobile,</if>
+            <if test="email != null">email,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="status != null">status,</if>
+            <if test="provinceId != null">province_id,</if>
+            <if test="cityId != null">city_id,</if>
+            <if test="areaId != null">area_id,</if>
+            <if test="address != null">address,</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id} ,</if>
+            <if test="username != null">#{username} ,</if>
+            <if test="password != null">#{password} ,</if>
+            <if test="image != null">#{image}  ,</if>
+            <if test="sex != null">#{sex} ,</if>
+            <if test="mobile != null">#{mobile} ,</if>
+            <if test="email != null">#{email},</if>
+            <if test="birthday != null">#{birthday},</if>
+            <if test="createTime != null">#{createTime} ,</if>
+            <if test="updateTime != null">#{updateTime} ,</if>
+            <if test="status != null">#{status} ,</if>
+            <if test="provinceId != null">#{provinceId} ,</if>
+            <if test="cityId != null">#{cityId} ,</if>
+            <if test="areaId != null">#{areaId} ,</if>
+            <if test="address != null">#{address} ,</if>
+        </trim>
+    </insert>
+    <!--修改信息-->
+    <!--根据传入参数的值，来动态生成sql语句-->
+    <update id="updateAdminUser" parameterType="com.teeth.pojo.AdminUser">
+        UPDATE admin_user
+        <set>
+            <if test="username != null">username=#{username},</if>
+            <if test="password != null">password=#{password} ,</if>
+            <if test="image != null">image=#{image} ,</if>
+            <if test="sex != null">sex=#{sex} ,</if>
+            <if test="mobile != null">mobile=#{mobile} ,</if>
+            <if test="email != null">email=#{email} ,</if>
+            <if test="birthday != null">birthday=#{birthday} ,</if>
+            <if test="createTime != null">create_time=#{createTime} ,</if>
+            <if test="updateTime != null">update_time=#{updateTime} ,</if>
+            <if test="status != null">status=#{status} ,</if>
+            <if test="provinceId != null">province_id=#{provinceId} ,</if>
+            <if test="cityId != null">city_id=#{cityId} ,</if>
+            <if test="areaId != null">area_id=#{areaId} ,</if>
+            <if test="address != null">address=#{address} ,</if>
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <delete id="deleteAdminUser" parameterType="java.lang.Integer">
+        delete from admin_user where id=#{id}
+    </delete>
+</mapper>

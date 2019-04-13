@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    <!-- 启用spring mvc 注解 -->
+    <context:component-scan base-package="com.zjitc.controller,com.zjitc.service"/>
+    <mvc:annotation-driven/>
+    <mvc:default-servlet-handler/>  <!--静态资源的访问设置-->
+
+
+    <!--解决json数据返回中文乱码-->
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=UTF-8</value>
+                        <value>application/json;charset=UTF-8</value>
+                        <value>text/plain;charset=UTF-8</value>
+                        <value>application/xml;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- thymeleaf模板解析器  前端使用html-->
+    <bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+        <constructor-arg ref="servletContext"/>
+        <property name="prefix" value="/" />
+        <property name="suffix" value=".html" />
+        <property name="templateMode" value="HTML5" />
+        <property name="cacheable" value="false" />
+        <property name="characterEncoding" value="UTF-8"/>
+    </bean>
+
+    <bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
+        <property name="templateResolver" ref="templateResolver" />
+        <property name="additionalDialects">
+            <!--这个属性是shiro+thymeleaf的扩展，可以像jsp一样使用,
+            在html中使用shiro的标签。
+            -->
+            <set>
+                <bean class="at.pollux.thymeleaf.shiro.dialect.ShiroDialect"/>
+            </set>
+        </property>
+    </bean>
+    <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+        <property name="templateEngine" ref="templateEngine" />
+        <property name="characterEncoding"  value="UTF-8" />
+    </bean>
+
+    <!-- 开启shiro的注解支持 -->
+    <bean id="defaultAdvisorAutoProxyCreator" class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
+        <!-- 必须改为true，即使用cglib方式为Action创建代理对象。默认值为false，使用JDK创建代理对象，会造成问题 -->
+        <property name="proxyTargetClass" value="true"></property>
+    </bean>
+    <!-- 使用shiro框架提供的切面类，用于创建代理对象 -->
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor"></bean>
+    <!--开启shiro的注解支持-->
+</beans>

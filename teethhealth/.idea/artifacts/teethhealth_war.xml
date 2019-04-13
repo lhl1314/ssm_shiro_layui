@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="teethhealth:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>teethhealth</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="teethhealth.war">
+      <element id="artifact" artifact-name="teethhealth:war exploded" />
+    </root>
+  </artifact>
+</component>

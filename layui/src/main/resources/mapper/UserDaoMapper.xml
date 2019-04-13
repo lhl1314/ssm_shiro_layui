@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjitc.layui.dao.UserDao">
+    <resultMap id="user" type="com.zjitc.layui.pojo.User">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="sex" property="sex"/>
+        <result column="header_image" property="headerImage"/>
+        <result column="hobby" property="hobby"/>
+        <result column="birthday" property="birthday"/>
+    </resultMap>
+    <select id="getAll" resultMap="user">
+        SELECT *FROM user
+    </select>
+
+    <select id="getOne" resultMap="user">
+        select *from user where id=#{id}
+    </select>
+    <insert id="add" parameterType="com.zjitc.layui.pojo.User" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="username != null">username,</if>
+            <if test="password != null">password,</if>
+            <if test="sex != null">sex,</if>
+            <if test="headerImage != null">header_image,</if>
+            <if test="hobby != null">hobby,</if>
+            <if test="birthday != null">birthday,</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id} ,</if>
+            <if test="username != null">#{username} ,</if>
+            <if test="password != null">#{password} ,</if>
+            <if test="sex != null">#{sex} ,</if>
+            <if test="headerImage != null">#{headerImage} ,</if>
+            <if test="hobby != null">#{hobby},</if>
+            <if test="birthday != null">#{birthday},</if>
+        </trim>
+    </insert>
+    <!--根据传入参数的值，来动态生成sql语句-->
+    <update id="update" parameterType="com.zjitc.layui.pojo.User">
+        UPDATE user
+        <set>
+            <if test="username != null">username=#{username},</if>
+            <if test="password != null">password=#{password} ,</if>
+            <if test="sex != null">sex=#{sex} ,</if>
+            <if test="headerImage != null">header_image=#{headerImage} ,</if>
+            <if test="hobby != null">hobby=#{hobby} ,</if>
+            <if test="birthday != null">birthday=#{birthday} ,</if>
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from user where id=#{id}
+    </delete>
+</mapper>

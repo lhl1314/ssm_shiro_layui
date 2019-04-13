@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjitc.dao.WifeDao">
+    <resultMap id="wife" type="com.zjitc.pojo.Wife">
+        <id property="id" column="id"/>
+        <result column="name" property="name"/>
+        <result column="user_id" property="userId"/>
+        <!--一对一的关系-->
+        <association property="user" javaType="com.zjitc.pojo.User">
+            <id property="id" column="user_id"/>
+            <result property="username" column="username"/>
+            <result property="hobby" column="hobby"/>
+            <result property="birthday" column="birthday"/>
+        </association>
+
+
+    </resultMap>
+   <select id="getALL" resultMap="wife">
+       select w.*,u.id user_id,u.username,u.hobby,u.birthday from wife
+       as w left  join user as u on u.id=w.user_id
+   </select>
+
+</mapper>

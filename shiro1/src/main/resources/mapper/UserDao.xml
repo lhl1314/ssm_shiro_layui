@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjitc.dao.UserDao">
+    <resultMap id="users" type="com.zjitc.pojo.User">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="hobby" column="hobby"/>
+        <result property="birthday" column="birthday"/>
+
+        <result property="password" column="password"/>
+        <!--
+        一对一：一个用户只有一个妻子，关联查询
+        -->
+        <association property="wife" javaType="com.zjitc.pojo.Wife">
+            <id property="id" column="wife_id"/><!--这里因为两个表的主键相同，所有起了别名-->
+            <result property="name" column="name"/>
+            <result property="userId" column="user_id"/>
+        </association>
+        <!--
+     一对多采用collection left join：一个用户含有多个订单
+     多对一：采用关联association
+     -->
+        <collection property="orders" column="user_id" ofType="com.zjitc.pojo.Order">
+            <id column="o_id" property="id"/><!--一对多，主键相同必须用别名-->
+            <result property="orderName" column="order_name"/>
+            <result property="orderTime" column="order_time"/>
+            <result property="userId" column="user_id"/>
+        </collection>
+    </resultMap>
+
+    <select id="findAll" resultMap="users">
+        select s.*,
+        w.id wife_id, w.name,w.user_id,
+        o.id o_id,o.order_name,o.order_time,o.user_id
+        from user
+        as s left join wife as w on s.id=w.user_id left join `order` as o on o.user_id=s.id
+    </select>
+
+    <select id="getOne" resultMap="users">
+        select *from user where username=#{username}
+    </select>
+</mapper>

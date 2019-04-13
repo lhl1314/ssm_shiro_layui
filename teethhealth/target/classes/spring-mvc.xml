@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+    <!-- 启用spring mvc 注解 -->
+    <context:component-scan base-package="com.teeth.controller,com.teeth.service"/>
+
+    <mvc:annotation-driven/>
+    <mvc:default-servlet-handler/>  <!--静态资源的访问设置-->
+
+       <bean id="firstCron" class="com.teeth.task.MyTask"/>
+    <!-- 设置定时任务 -->
+      <task:annotation-driven/>
+       <!--<task:scheduled-tasks>-->
+            <!--<task:scheduled ref="firstCron" method="cron" cron="0/5 * * * * ?"/>-->
+        <!--</task:scheduled-tasks>-->
+
+
+    <!--Mvc的全局异常处理注册-->
+    <context:component-scan base-package="com.teeth.exception" use-default-filters="false">
+        <!--控制器增强，使一个Contoller成为全局的异常处理类，类中用@ExceptionHandler方法注解的方法可以处理所有Controller发生的异常-->
+        <context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+        <context:exclude-filter type="annotation"  expression="org.springframework.stereotype.Service" />
+        <context:exclude-filter type="annotation"  expression="org.springframework.stereotype.Repository" />
+    </context:component-scan>
+    <!--解决json数据返回中文乱码-->
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <!--html页面乱码问题-->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=UTF-8</value>
+                        <value>application/json;charset=UTF-8</value>
+                        <value>text/plain;charset=UTF-8</value>
+                        <value>application/xml;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+            <!-- 处理responseBody json数据 里面日期类型 -->
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="objectMapper">
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <property name="dateFormat">
+                            <bean class="java.text.SimpleDateFormat">
+                                <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+                            </bean>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- thymeleaf模板解析器  前端使用html-->
+    <bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+        <constructor-arg ref="servletContext"/>
+        <property name="prefix" value="/" />
+        <property name="suffix" value=".html" />
+        <property name="templateMode" value="HTML5" />
+        <property name="cacheable" value="false" />
+        <property name="characterEncoding" value="UTF-8"/>
+    </bean>
+
+    <bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
+        <property name="templateResolver" ref="templateResolver" />
+        <property name="additionalDialects">
+            <!--这个属性是shiro+thymeleaf的扩展，可以像jsp一样使用,
+            在html中使用shiro的标签。
+            -->
+            <set>
+                <bean class="at.pollux.thymeleaf.shiro.dialect.ShiroDialect"/>
+            </set>
+        </property>
+    </bean>
+    <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+        <property name="templateEngine" ref="templateEngine" />
+        <property name="characterEncoding"  value="UTF-8" />
+    </bean>
+
+    <!-- 开启shiro的注解支持 -->
+    <bean id="defaultAdvisorAutoProxyCreator" class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
+        <!-- 必须改为true，即使用cglib方式为Action创建代理对象。默认值为false，使用JDK创建代理对象，会造成问题 -->
+        <property name="proxyTargetClass" value="true"></property>
+    </bean>
+    <!-- 使用shiro框架提供的切面类，用于创建代理对象 -->
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor"></bean>
+    <!--开启shiro的注解支持-->
+
+    <!-- SpringMVC上传文件时，需要配置MultipartResolver处理器 -->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8"></property>
+        <property name="maxUploadSize" value="10485760000"></property>
+        <property name="maxInMemorySize" value="40960"></property>
+        <!-- 指定所上传文件的总大小不能超过200KB。注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和 -->
+    </bean>
+</beans>

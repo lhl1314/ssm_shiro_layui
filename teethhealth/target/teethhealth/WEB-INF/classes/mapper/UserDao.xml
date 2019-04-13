@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teeth.dao.UserDao">
+    <resultMap id="users" type="com.teeth.pojo.User">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="hobby" column="hobby"/>
+        <result property="birthday" column="birthday"/>
+        <result property="password" column="password"/>
+    </resultMap>
+
+
+    <select id="getOne" resultMap="users">
+        select *from user where username=#{username}
+    </select>
+
+    <select id="getAll" resultMap="users">
+        select *from user
+    </select>
+</mapper>

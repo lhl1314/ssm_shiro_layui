@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>后台管理主页</title>
+</head>
+<body>
+<h1>这是后台管理登录成功返回的页面</h1>
+<h1 shiro:hasRole="老板">
+    这是具有老板所具有的权限
+</h1>
+<h1 shiro:hasRole="客服">
+    这是客服角色可以看到的。
+</h1>
+
+<h1 shiro:hasRole="员工">这是员工可以看到的</h1>
+<a href="/index.html">去index4页面</a>
+<a href="/admin/adminUser/toLayuiHome">去layui的主页</a>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teeth.dao.AddressChooseDao">
+
+    <resultMap id="province" type="com.teeth.pojo.Province">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+        <result property="countryId" column="country_id"/>
+    </resultMap>
+
+    <resultMap id="city" type="com.teeth.pojo.City">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+        <result property="countryId" column="country_id"/>
+        <result property="provinceId" column="province_id"/>
+
+    </resultMap>
+
+
+
+    <resultMap id="area" type="com.teeth.pojo.Area">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+        <result property="cityId" column="city_id"/>
+    </resultMap>
+
+    <select id="getAllProvince" parameterType="java.lang.Integer" resultMap="province">
+        select p.id,p.Name from province as p where country_id=#{countryId}
+    </select>
+
+    <select id="getAllCity" parameterType="java.lang.Integer" resultMap="city">
+        select id, Name, Code, country_id, province_id from city as c where province_id=#{provinceId}
+    </select>
+
+    <select id="getAllArea" parameterType="java.lang.Integer" resultMap="area">
+        select  area.id, Name, Code, city_id from area where city_id=#{cityId}
+    </select>
+
+
+
+    <select id="getOneProvince" parameterType="java.lang.Integer" resultMap="province">
+        select  province.id, Name, Code, country_id from province where id=#{provinceId}
+    </select>
+
+
+    <select id="getOneCity" parameterType="java.lang.Integer" resultMap="city">
+        select city.id, Name, Code, country_id, province_id from city where  id=#{cityId}
+    </select>
+
+    <select id="getOneArea" parameterType="java.lang.Integer" resultMap="area">
+        select area.id, Name, Code, city_id from area where area.id=#{areaId}
+    </select>
+
+
+</mapper>
